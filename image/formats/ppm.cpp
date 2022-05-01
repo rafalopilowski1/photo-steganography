@@ -31,14 +31,18 @@ Ppm::Ppm(std::string fileInputPath) {
         std::cerr << "It is not an P3 PPM file! Aborting!" << '\n';
         exit(1);
     }
-
-    image_width = stoi(elements[1]);
-    image_height = stoi(elements[2]);
-    max_color_count = stoi(elements[3]);
+    try {
+        image_width = stoi(elements[1]);
+        image_height = stoi(elements[2]);
+        max_color_count = stoi(elements[3]);
+    } catch (std::invalid_argument ex) {
+        std::cout << "Invalid argument: " << ex.what() << '\n';
+        exit(1);
+    }
     elements.erase(elements.begin(), elements.begin() + 4);
     if (elements.size() != image_width * image_height * 3) {
         std::cerr << "Error reading file!" << '\n';
-        exit(3);
+        exit(2);
     }
     pixelBuffer = {};
     read_to_pixels(elements, this);
@@ -50,15 +54,19 @@ Ppm::Ppm(std::string fileInputPath) {
  * @param container inicjalizowana klasa `Ppm`
  */
 auto Ppm::read_to_pixels(std::vector<std::string> linesBuffer, Ppm *container) -> void {
-    for (int y = 0; y < container->image_height * 3; y += 3) {
-        for (int x = 0; x < container->image_width * 3; x += 3) {
-            auto red = stoi(linesBuffer[x + (y * container->image_width)]),
-                    green = stoi(linesBuffer[x + (y * container->image_width) + 1]),
-                    blue = stoi(linesBuffer[x + (y * container->image_width) + 2]);
-
-            std::cout << "Pixel " << x / 3 + 1 << ":" << y / 3 + 1 << '\n';
-            container->pixelBuffer.emplace_back(x / 3 + 1, y / 3 + 1, red, green, blue);
+    try {
+        for (int y = 0; y < container->image_height * 3; y += 3) {
+            for (int x = 0; x < container->image_width * 3; x += 3) {
+                auto red = stoi(linesBuffer[x + (y * container->image_width)]),
+                        green = stoi(linesBuffer[x + (y * container->image_width) + 1]),
+                        blue = stoi(linesBuffer[x + (y * container->image_width) + 2]);
+                std::cout << "Pixel " << x / 3 + 1 << ":" << y / 3 + 1 << '\n';
+                container->pixelBuffer.emplace_back(x / 3 + 1, y / 3 + 1, red, green, blue);
+            }
         }
+    } catch (std::invalid_argument ex) {
+        std::cout << "Invalid argument: " << ex.what() << '\n';
+        exit(1);
     }
 
 }
@@ -82,6 +90,7 @@ auto Ppm::write_to_file(std::string fileOutputPath, std::string message) -> void
     }
     fileOutputStream.close();
 }
- auto Ppm::get_pixel_vector() -> std::vector<Pixel> & {
+
+auto Ppm::get_pixel_vector() -> std::vector<Pixel> & {
     return pixelBuffer;
 }
