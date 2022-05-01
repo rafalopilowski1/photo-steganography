@@ -10,6 +10,6 @@ namespace cli {
         CHECK,
         INFO
     };
-    auto string_to_enum(std::string str) -> Flag;
+    auto string_to_enum(const std::string & str) -> Flag;
     auto run(int args_count,char* args[]) -> void;
 }

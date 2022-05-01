@@ -13,11 +13,11 @@ namespace image::formats {
         std::vector<Pixel> pixelBuffer;
 
     public:
-        explicit Ppm(std::string fileInputPath);
+        explicit Ppm(const std::string & fileInputPath);
 
-        static auto read_to_pixels(std::vector<std::string> linesBuffer, Ppm *container) -> void;
+        static auto read_to_pixels(const std::vector<std::string> & linesBuffer, Ppm * container) -> void;
 
-        auto write_to_file(std::string fileOutputPath, std::string message) -> void;
+        auto write_to_file(const std::string & fileOutputPath, const std::string & message) -> void;
 
         auto get_pixel_vector() -> std::vector<Pixel> &;
     };

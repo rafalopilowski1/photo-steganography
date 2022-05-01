@@ -8,7 +8,7 @@
 #include "cli/flags.hpp"
 
 namespace cli {
-    auto string_to_enum(std::string str) -> Flag {
+    auto string_to_enum(const std::string & str) -> Flag {
         if (str == "-e" || str == "--encode")
             return Flag::ENCODE;
         if (str == "-d" || str == "--decode")
