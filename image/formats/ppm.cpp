@@ -4,7 +4,6 @@
 #include <ranges>
 #include <sstream>
 #include <iostream>
-#include <algorithm>
 #include "image/formats/ppm.hpp"
 
 using Ppm = image::formats::Ppm;
@@ -43,10 +42,6 @@ Ppm::Ppm(std::string fileInputPath) {
     }
     pixelBuffer = {};
     read_to_pixels(elements, this);
-    std::ranges::sort(pixelBuffer, [](Pixel pixel1, Pixel pixel2) {
-        return pixel2.red.to_ulong() + pixel2.green.to_ulong() + pixel2.blue.to_ulong() >
-               pixel1.red.to_ulong() + pixel1.green.to_ulong() + pixel1.blue.to_ulong();
-    });
 }
 
 /**
@@ -73,12 +68,6 @@ auto Ppm::read_to_pixels(std::vector<std::string> linesBuffer, Ppm *container) -
  * @param fileOutputStream strumień wyjściowy pliku docelowego
  */
 auto Ppm::write_to_file(std::string fileOutputPath, std::string message) -> void {
-    std::ranges::sort(pixelBuffer, [this](Pixel pixel1, Pixel pixel2) {
-        auto pixel1_length = pixel1.x + pixel1.y * image_width;
-        auto pixel2_length = pixel2.x + pixel2.y * image_width;
-        return pixel2_length > pixel1_length;
-    });
-
     auto fileOutputStream = std::ofstream(fileOutputPath, std::ios_base::binary);
     fileOutputStream << "P3" << '\n';
     fileOutputStream << image_width << ' ' << image_height << '\n';
@@ -92,4 +81,7 @@ auto Ppm::write_to_file(std::string fileOutputPath, std::string message) -> void
             fileOutputStream << ' ';
     }
     fileOutputStream.close();
+}
+ auto Ppm::get_pixel_vector() -> std::vector<Pixel> & {
+    return pixelBuffer;
 }

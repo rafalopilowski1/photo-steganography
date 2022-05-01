@@ -18,5 +18,7 @@ namespace image::formats {
         static auto read_to_pixels(std::vector<std::string> linesBuffer, Ppm *container) -> void;
 
         auto write_to_file(std::string fileOutputPath, std::string message) -> void;
+
+        auto get_pixel_vector() -> std::vector<Pixel> &;
     };
 }
