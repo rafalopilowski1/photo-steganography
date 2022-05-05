@@ -3,5 +3,5 @@
 #include <string>
 
 namespace cli {
-    auto check(std::string filePath, std::string message) -> void;
+    auto check(const std::string & filePath, const std::string & message) -> void;
 }
