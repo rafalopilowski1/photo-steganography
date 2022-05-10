@@ -12,7 +12,6 @@ namespace image {
     public:
         auto edit_3_bits(bool first, bool second, bool third) -> void;
 
-
         unsigned int x;
         unsigned int y;
         std::bitset<8> red;
