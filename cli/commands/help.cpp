@@ -7,6 +7,6 @@ namespace cli {
         auto flag_decode = "   - `-d`: help";
         auto flag_check = "   - `-c`: check";
         auto flag_info = "   - `-i`: info";
-        printf("%s\nFlags: \n%s\n%s\n%s\n%s\n%s", intro, flag_help, flag_encode, flag_decode, flag_check, flag_info);
+        printf("%s\nFlags: \n%s\n%s\n%s\n%s\n%s\n\n", intro, flag_help, flag_encode, flag_decode, flag_check, flag_info);
     }
 }
