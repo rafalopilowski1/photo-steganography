@@ -5,7 +5,7 @@
 #include "image/pixel.hpp"
 
 namespace image::formats {
-    class Ppm {
+    struct Ppm {
         inline static const std::string Header = "P3";
         int image_width;
         int image_height;
