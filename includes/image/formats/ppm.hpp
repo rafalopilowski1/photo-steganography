@@ -10,6 +10,7 @@ namespace image::formats {
         int image_width;
         int image_height;
         int max_color_count;
+        std::string metadata;
         std::vector<Pixel> pixelBuffer;
 
     public:
@@ -20,5 +21,7 @@ namespace image::formats {
         auto write_to_file(const std::string & fileOutputPath, const std::vector<Pixel> & pixelVector) -> void;
 
         auto get_pixel_vector() -> std::vector<Pixel> &;
+
+        void add_metadata(unsigned long messageBitsSize);
     };
 }

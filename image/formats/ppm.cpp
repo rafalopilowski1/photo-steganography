@@ -13,6 +13,7 @@ using Ppm = image::formats::Ppm;
  * @param fileInputPath ścieżka do zczytywanego pliku
  */
 Ppm::Ppm(const std::string &fileInputPath) {
+    metadata = "";
     auto fileInputStream = std::ifstream(fileInputPath, std::ios_base::binary);
     auto file_begin = std::istreambuf_iterator<char>(fileInputStream);
     auto file_end = std::istreambuf_iterator<char>();
@@ -39,6 +40,10 @@ Ppm::Ppm(const std::string &fileInputPath) {
         std::cout << "Invalid argument: " << ex.what() << '\n';
         exit(1);
     }
+    if (elements[elements.size() - 1].find('#') != std::string::npos) {
+        metadata += elements[elements.size() - 1];
+        elements.erase(elements.end() - 2, elements.end() - 1);
+    }
     elements.erase(elements.begin(), elements.begin() + 4);
     if (elements.size() != image_width * image_height * 3) {
         std::cerr << "Error reading file!" << '\n';
@@ -46,6 +51,7 @@ Ppm::Ppm(const std::string &fileInputPath) {
     }
     pixelBuffer = {};
     read_to_pixels(elements, this);
+
 }
 
 /**
@@ -60,7 +66,7 @@ auto Ppm::read_to_pixels(const std::vector<std::string> &linesBuffer, Ppm *conta
                 auto red = stoi(linesBuffer[x + (y * container->image_width)]),
                         green = stoi(linesBuffer[x + (y * container->image_width) + 1]),
                         blue = stoi(linesBuffer[x + (y * container->image_width) + 2]);
-                std::cout << "Pixel " << x / 3 + 1 << ":" << y / 3 + 1 << '\n';
+                // std::cout << "Pixel " << x / 3 + 1 << ":" << y / 3 + 1 << '\n';
                 container->pixelBuffer.emplace_back(x / 3 + 1, y / 3 + 1, red, green, blue);
             }
         }
@@ -89,9 +95,14 @@ auto Ppm::write_to_file(const std::string &fileOutputPath, const std::vector<Pix
         if (i != (pixelsBuffer.size() - 1))
             fileOutputStream << ' ';
     }
+    fileOutputStream << "\n# " << metadata;
     fileOutputStream.close();
 }
 
 auto Ppm::get_pixel_vector() -> std::vector<Pixel> & {
     return pixelBuffer;
+}
+
+void image::formats::Ppm::add_metadata(unsigned long messageBitsSize) {
+    metadata += std::to_string(messageBitsSize);
 }
