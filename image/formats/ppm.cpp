@@ -12,7 +12,7 @@ using Ppm = image::formats::Ppm;
  * Konstruktor klasy `Ppm` dekoduje obraz do wektora pikseli
  * @param fileInputPath ścieżka do zczytywanego pliku
  */
-Ppm::Ppm(const std::string & fileInputPath) {
+Ppm::Ppm(const std::string &fileInputPath) {
     auto fileInputStream = std::ifstream(fileInputPath, std::ios_base::binary);
     auto file_begin = std::istreambuf_iterator<char>(fileInputStream);
     auto file_end = std::istreambuf_iterator<char>();
@@ -35,7 +35,7 @@ Ppm::Ppm(const std::string & fileInputPath) {
         image_width = stoi(elements[1]);
         image_height = stoi(elements[2]);
         max_color_count = stoi(elements[3]);
-    } catch (const std::invalid_argument & ex) {
+    } catch (const std::invalid_argument &ex) {
         std::cout << "Invalid argument: " << ex.what() << '\n';
         exit(1);
     }
@@ -53,7 +53,7 @@ Ppm::Ppm(const std::string & fileInputPath) {
  * @param linesBuffer bufor zczytanych linii
  * @param container inicjalizowana klasa `Ppm`
  */
-auto Ppm::read_to_pixels(const std::vector<std::string> & linesBuffer, Ppm *container) -> void {
+auto Ppm::read_to_pixels(const std::vector<std::string> &linesBuffer, Ppm *container) -> void {
     try {
         for (int y = 0; y < container->image_height * 3; y += 3) {
             for (int x = 0; x < container->image_width * 3; x += 3) {
@@ -64,7 +64,7 @@ auto Ppm::read_to_pixels(const std::vector<std::string> & linesBuffer, Ppm *cont
                 container->pixelBuffer.emplace_back(x / 3 + 1, y / 3 + 1, red, green, blue);
             }
         }
-    } catch (const std::invalid_argument & ex) {
+    } catch (const std::invalid_argument &ex) {
         std::cout << "Invalid argument: " << ex.what() << '\n';
         exit(1);
     }
@@ -76,17 +76,17 @@ auto Ppm::read_to_pixels(const std::vector<std::string> & linesBuffer, Ppm *cont
  * @param fileOutputPath ścieżka do pliku docelowego
  * @param message wiadomość do zapisania
  */
-auto Ppm::write_to_file(const std::string & fileOutputPath, const std::string & message) -> void {
+auto Ppm::write_to_file(const std::string &fileOutputPath, const std::vector<Pixel> &pixelsBuffer) -> void {
     auto fileOutputStream = std::ofstream(fileOutputPath, std::ios_base::binary);
     fileOutputStream << "P3" << '\n';
     fileOutputStream << image_width << ' ' << image_height << '\n';
     fileOutputStream << max_color_count << '\n';
 
-    for (int i = 0; i < pixelBuffer.size(); ++i) {
-        fileOutputStream << pixelBuffer[i].red.to_ulong() << ' '
-                         << pixelBuffer[i].green.to_ulong()
-                         << ' ' << pixelBuffer[i].blue.to_ulong();
-        if (i != (pixelBuffer.size() - 1))
+    for (int i = 0; i < pixelsBuffer.size(); ++i) {
+        fileOutputStream << pixelsBuffer[i].red.to_ulong() << ' '
+                         << pixelsBuffer[i].green.to_ulong()
+                         << ' ' << pixelsBuffer[i].blue.to_ulong();
+        if (i != (pixelsBuffer.size() - 1))
             fileOutputStream << ' ';
     }
     fileOutputStream.close();
