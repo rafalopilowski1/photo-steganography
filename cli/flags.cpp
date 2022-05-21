@@ -13,7 +13,7 @@ namespace cli {
             return Flag::ENCODE;
         if (str == "-d" || str == "--decode")
             return Flag::DECODE;
-        if (str == "-c" || str == "--check")
+        if (str == "-c" || str == "--check_size_ascii")
             return Flag::CHECK;
         if (str == "-i" || str == "--info")
             return Flag::INFO;
@@ -50,7 +50,7 @@ namespace cli {
                 if (args_count == 4) {
                     auto input_src = args[2];
                     auto message = args[3];
-                    cli::check(input_src, message);
+                    cli::check_size_ascii(input_src, message);
                 } else {
                     std::cerr << "Bad arguments" << "\n\n";
                     cli::help();
