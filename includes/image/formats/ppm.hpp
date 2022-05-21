@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <deque>
+#include <vector>
 #include "image/pixel.hpp"
 
 namespace image::formats {
@@ -23,5 +23,9 @@ namespace image::formats {
         auto get_pixel_vector() -> std::vector<Pixel> &;
 
         void add_metadata(unsigned long messageBitsSize);
+
+        bool has_metadata();
+
+        int get_message_size();
     };
 }

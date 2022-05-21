@@ -1,4 +1,4 @@
 #pragma once
 namespace cli {
-    auto decode(std::string string) -> void;
+    auto decode(const std::string &inputFilePath) -> void;
 }

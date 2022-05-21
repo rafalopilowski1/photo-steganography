@@ -40,9 +40,9 @@ Ppm::Ppm(const std::string &fileInputPath) {
         std::cout << "Invalid argument: " << ex.what() << '\n';
         exit(1);
     }
-    if (elements[elements.size() - 1].find('#') != std::string::npos) {
+    if (elements[elements.size() - 2] == "#") {
         metadata += elements[elements.size() - 1];
-        elements.erase(elements.end() - 2, elements.end() - 1);
+        elements.erase(elements.end() - 2, elements.end());
     }
     elements.erase(elements.begin(), elements.begin() + 4);
     if (elements.size() != image_width * image_height * 3) {
@@ -63,9 +63,9 @@ auto Ppm::read_to_pixels(const std::vector<std::string> &linesBuffer, Ppm *conta
     try {
         for (int y = 0; y < container->image_height * 3; y += 3) {
             for (int x = 0; x < container->image_width * 3; x += 3) {
-                auto red = stoi(linesBuffer[x + (y * container->image_width)]),
-                        green = stoi(linesBuffer[x + (y * container->image_width) + 1]),
-                        blue = stoi(linesBuffer[x + (y * container->image_width) + 2]);
+                auto red = stoull(linesBuffer[x + (y * container->image_width)]),
+                        green = stoull(linesBuffer[x + (y * container->image_width) + 1]),
+                        blue = stoull(linesBuffer[x + (y * container->image_width) + 2]);
                 // std::cout << "Pixel " << x / 3 + 1 << ":" << y / 3 + 1 << '\n';
                 container->pixelBuffer.emplace_back(x / 3 + 1, y / 3 + 1, red, green, blue);
             }
@@ -89,9 +89,9 @@ auto Ppm::write_to_file(const std::string &fileOutputPath, const std::vector<Pix
     fileOutputStream << max_color_count << '\n';
 
     for (int i = 0; i < pixelsBuffer.size(); ++i) {
-        fileOutputStream << pixelsBuffer[i].red.to_ulong() << ' '
-                         << pixelsBuffer[i].green.to_ulong()
-                         << ' ' << pixelsBuffer[i].blue.to_ulong();
+        fileOutputStream << pixelsBuffer[i].red.to_ullong() << ' '
+                         << pixelsBuffer[i].green.to_ullong()
+                         << ' ' << pixelsBuffer[i].blue.to_ullong();
         if (i != (pixelsBuffer.size() - 1))
             fileOutputStream << ' ';
     }
@@ -105,4 +105,12 @@ auto Ppm::get_pixel_vector() -> std::vector<Pixel> & {
 
 void image::formats::Ppm::add_metadata(unsigned long messageBitsSize) {
     metadata += std::to_string(messageBitsSize);
+}
+
+bool image::formats::Ppm::has_metadata() {
+    return !metadata.empty();
+}
+
+int image::formats::Ppm::get_message_size() {
+    return std::stoi(metadata);
 }
