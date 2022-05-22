@@ -18,14 +18,14 @@ namespace image::formats {
 
         static auto read_to_pixels(const std::vector<std::string> & linesBuffer, Ppm * container) -> void;
 
-        auto write_to_file(const std::string & fileOutputPath, const std::vector<Pixel> & pixelVector) -> void;
+        auto write_to_file(const std::string & fileOutputPath, const std::vector<Pixel> & pixelVector) const -> void;
 
         auto get_pixel_vector() -> std::vector<Pixel> &;
 
         void add_metadata(unsigned long messageBitsSize);
 
-        bool has_metadata();
+        bool has_metadata() const;
 
-        int get_message_size();
+        int get_message_size() const;
     };
 }

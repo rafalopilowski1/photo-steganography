@@ -82,7 +82,7 @@ auto Ppm::read_to_pixels(const std::vector<std::string> &linesBuffer, Ppm *conta
  * @param fileOutputPath ścieżka do pliku docelowego
  * @param message wiadomość do zapisania
  */
-auto Ppm::write_to_file(const std::string &fileOutputPath, const std::vector<Pixel> &pixelsBuffer) -> void {
+auto Ppm::write_to_file(const std::string &fileOutputPath, const std::vector<Pixel> &pixelsBuffer) const -> void {
     auto fileOutputStream = std::ofstream(fileOutputPath, std::ios_base::binary);
     fileOutputStream << "P3" << '\n';
     fileOutputStream << image_width << ' ' << image_height << '\n';
@@ -107,10 +107,10 @@ void image::formats::Ppm::add_metadata(unsigned long messageBitsSize) {
     metadata += std::to_string(messageBitsSize);
 }
 
-bool image::formats::Ppm::has_metadata() {
+bool image::formats::Ppm::has_metadata() const {
     return !metadata.empty();
 }
 
-int image::formats::Ppm::get_message_size() {
+int image::formats::Ppm::get_message_size() const {
     return std::stoi(metadata);
 }
