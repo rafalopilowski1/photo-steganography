@@ -1,13 +1,10 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "image/formats/ppm.hpp"
 #include "image/pixel.hpp"
 
 namespace cli {
-    auto check_size_ascii(const std::string &filePath, const std::string &message) -> bool {
-        auto ppmInputFile = image::formats::Ppm(filePath);
-        std::vector<image::Pixel> &pixelVector = ppmInputFile.get_pixel_vector();
+    auto check_size_ascii(const std::vector<image::Pixel> &pixelVector, const std::string &message) -> bool {
         auto messageLenBits = message.size() * 8;
         auto imageSizePotencial = (pixelVector.size() * 3);
         if (messageLenBits <= imageSizePotencial) {

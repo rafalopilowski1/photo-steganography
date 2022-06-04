@@ -6,9 +6,10 @@
 #include "cli/commands/info.hpp"
 #include "cli/commands/check.hpp"
 #include "cli/flags.hpp"
+#include "image/formats/ppm.hpp"
 
 namespace cli {
-    auto string_to_enum(const std::string & str) -> Flag {
+    auto string_to_enum(const std::string &str) -> Flag {
         if (str == "-e" || str == "--encode")
             return Flag::ENCODE;
         if (str == "-d" || str == "--decode")
@@ -50,7 +51,9 @@ namespace cli {
                 if (args_count == 4) {
                     auto input_src = args[2];
                     auto message = args[3];
-                    cli::check_size_ascii(input_src, message);
+                    auto ppmInputFile = image::formats::Ppm(input_src);
+                    std::vector<image::Pixel> &pixelVector = ppmInputFile.get_pixel_vector();
+                    cli::check_size_ascii(pixelVector, message);
                 } else {
                     std::cerr << "Bad arguments" << "\n\n";
                     cli::help();
