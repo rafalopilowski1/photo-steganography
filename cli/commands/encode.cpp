@@ -1,5 +1,5 @@
 #include "cli/commands/check.hpp"
-#include "image/formats/ppm.hpp"
+#include "image/image.hpp"
 #include <bit>
 #include <chrono>
 #include <string>
@@ -9,7 +9,7 @@ namespace cli {
     auto encode(const std::string &inputFilePath, const std::string &outputFilePath,
                 const std::string &message) -> void {
         // TODO: Switch between formats by counting on file extension
-        auto ppmInputFile = image::formats::Ppm(inputFilePath);
+        auto ppmInputFile = image::Ppm(inputFilePath);
         std::vector<image::Pixel> &pixelVector = ppmInputFile.get_pixel_vector();
         if (check_size_ascii(pixelVector, message)) {
             std::vector<std::bitset<8>> message_bytes{};
