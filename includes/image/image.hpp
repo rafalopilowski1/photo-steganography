@@ -5,6 +5,7 @@
 #include <iterator>
 #include <cmath>
 #include <algorithm>
+#include <filesystem>
 #include "image/pixel.hpp"
 
 namespace image {
@@ -35,7 +36,7 @@ namespace image {
     };
 
     struct Ppm : Image {
-        inline static const std::string Header = "P3";
+        constexpr static const char Header[2]{'P', '3'};
 
         explicit Ppm(const std::string &fileInputPath) {
             auto metadata = std::string();
@@ -119,7 +120,7 @@ namespace image {
     };
 
     struct Bmp : Image {
-        inline static const std::string Header = "BM";
+        constexpr static const char Header[2]{'B', 'M'};
         /// Size of header in `BITMAPINFOHEADER`
         inline static const uint32_t HeaderSize = 40;
         constexpr static const char Metadata[2]{'P', 'J'};
@@ -191,12 +192,9 @@ namespace image {
         auto read_to_pixels_bmp(std::ifstream &fileInputStream) -> void {
             fileInputStream.seekg(pixel_data_offset);
             for (int i = 0; i < (image_size / sizeof(uint16_t)); ++i) {
-                unsigned char red = 0;
-                unsigned char green = 0;
-                unsigned char blue = 0;
-                red = fileInputStream.get();
-                green = fileInputStream.get();
-                blue = fileInputStream.get();
+                unsigned char red = fileInputStream.get();
+                unsigned char green = fileInputStream.get();
+                unsigned char blue = fileInputStream.get();
                 pixelsBuffer.emplace_back((i % image_width), image_height - (i / image_height), std::bitset<8>(red),
                                           std::bitset<8>(green), std::bitset<8>(blue));
             }
@@ -218,7 +216,7 @@ namespace image {
             uint32_t total_colors = 0;
             uint32_t important_colors = 0;
             std::cout << "Saving to BMP file..." << '\n';
-            writeBinaryToFileOutputStream(fileOutputStream, Header.data(), sizeof(char) * 2);
+            writeBinaryToFileOutputStream(fileOutputStream, &Header, sizeof(char) * 2);
             writeBinaryToFileOutputStream(fileOutputStream, &file_size, sizeof(uint32_t));
             writeBinaryToFileOutputStream(fileOutputStream, &Metadata, sizeof(char) * 2);
             writeBinaryToFileOutputStream(fileOutputStream, &message_size, sizeof(uint16_t));
@@ -246,4 +244,5 @@ namespace image {
             std::cout << "Done!" << '\n';
         }
     };
+
 }

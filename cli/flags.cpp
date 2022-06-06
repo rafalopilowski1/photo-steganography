@@ -6,7 +6,7 @@
 #include "cli/commands/info.hpp"
 #include "cli/commands/check.hpp"
 #include "cli/flags.hpp"
-#include "image/formats/ppm.hpp"
+#include "image/image.hpp"
 
 namespace cli {
     auto string_to_enum(const std::string &str) -> Flag {
@@ -51,7 +51,7 @@ namespace cli {
                 if (args_count == 4) {
                     auto input_src = args[2];
                     auto message = args[3];
-                    auto ppmInputFile = image::formats::Ppm(input_src);
+                    auto ppmInputFile = image::Bmp(input_src);
                     std::vector<image::Pixel> &pixelVector = ppmInputFile.get_pixel_vector();
                     cli::check_size_ascii(pixelVector, message);
                 } else {

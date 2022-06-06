@@ -9,7 +9,6 @@ namespace cli {
     auto encode(const std::string &inputFilePath, const std::string &outputFilePath,
                 const std::string &message) -> void {
         // TODO: Switch between formats by counting on file extension
-        auto message_copy = message;
         auto bmpInputFile = image::Bmp(inputFilePath);
         std::vector<image::Pixel> &pixelVector = bmpInputFile.get_pixel_vector();
         if (check_size_ascii(pixelVector, message)) {
