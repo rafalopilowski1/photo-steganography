@@ -19,7 +19,6 @@ namespace cli {
 
             auto buf = std::bitset<8>{};
             unsigned int step = (pixelVector.size() * 3) / (messageLenBits);
-            unsigned int index = 0;
             for (unsigned int i = 0; i < messageLenBits; i++) {
                 auto byte = pixelVector[(i * step) / 3][(i * step) % 3];
                 bool bit = byte[0];
@@ -28,14 +27,8 @@ namespace cli {
                     buf.reset();
                 }
                 buf.set(i % 8, bit);
-                unsigned int progress = 100 * i / (messageLenBits);
-                if (progress > index) {
-                    index = progress;
-                    std::cout << progress << "%"
-                              << "\n";
-                }
             }
-            std::cout << "100%"
+            std::cout << "Done!"
                       << "\n";
             std::cout << "Decrypted message:\n\n" << message << '\n';
 

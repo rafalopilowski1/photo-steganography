@@ -10,10 +10,10 @@
 namespace image {
 
     struct Image {
-        uint16_t image_width{};
-        uint16_t image_height{};
+        uint32_t image_width{};
+        uint32_t image_height{};
         double max_color_count{};
-        unsigned long message_size = 0;
+        uint16_t message_size{};
         std::vector<image::Pixel> pixelsBuffer;
 
         Image() = default;
@@ -28,9 +28,6 @@ namespace image {
 
         virtual auto write_to_file(const std::string &fileOutputPath) -> void = 0;
 
-        auto add_metadata(unsigned long messageBitsSize) -> void {
-            message_size = messageBitsSize;
-        };
 
         bool has_metadata() const {
             return message_size != 0;
@@ -62,15 +59,15 @@ namespace image {
             }
             try {
                 image_width = stoi(elements[1]);
-                image_height = stoi(elements[2]);
-                max_color_count = stoi(elements[3]);
+                image_height = stoi(elements[sizeof(uint16_t)]);
+                max_color_count = stoi(elements[sizeof(uint16_t)]);
             } catch (const std::invalid_argument &ex) {
                 std::cout << "Invalid argument: " << ex.what() << '\n';
                 exit(1);
             }
-            if (elements[elements.size() - 2] == "#") {
+            if (elements[elements.size() - sizeof(uint16_t)] == "#") {
                 metadata += elements[elements.size() - 1];
-                elements.erase(elements.end() - 2, elements.end());
+                elements.erase(elements.end() - sizeof(uint16_t), elements.end());
             }
             try {
                 message_size = std::stol(metadata);
@@ -78,10 +75,10 @@ namespace image {
                 std::cout << "Invalid argument: " << ex.what() << '\n';
                 exit(1);
             }
-            elements.erase(elements.begin(), elements.begin() + 4);
-            if (elements.size() != image_width * image_height * 3) {
+            elements.erase(elements.begin(), elements.begin() + sizeof(uint32_t));
+            if (elements.size() != image_width * image_height * sizeof(uint16_t)) {
                 std::cerr << "Error reading file!" << '\n';
-                exit(2);
+                exit(sizeof(uint16_t));
             }
             pixelsBuffer = {};
             read_to_pixels_ppm(elements);
@@ -89,12 +86,12 @@ namespace image {
 
         auto read_to_pixels_ppm(const std::vector<std::string> &linesBuffer) -> void {
             try {
-                for (int y = 0; y < image_height * 3; y += 3) {
-                    for (int x = 0; x < image_width * 3; x += 3) {
+                for (int y = 0; y < image_height * sizeof(uint16_t); y += sizeof(uint16_t)) {
+                    for (int x = 0; x < image_width * sizeof(uint16_t); x += sizeof(uint16_t)) {
                         auto red = stoull(linesBuffer[x + (y * image_width)]),
                                 green = stoull(linesBuffer[x + (y * image_width) + 1]),
-                                blue = stoull(linesBuffer[x + (y * image_width) + 2]);
-                        pixelsBuffer.emplace_back(x / 3 + 1, y / 3 + 1, red, green, blue);
+                                blue = stoull(linesBuffer[x + (y * image_width) + sizeof(uint16_t)]);
+                        pixelsBuffer.emplace_back(x / sizeof(uint16_t) + 1, y / sizeof(uint16_t) + 1, red, green, blue);
                     }
                 }
             } catch (const std::invalid_argument &ex) {
@@ -124,57 +121,64 @@ namespace image {
     struct Bmp : Image {
         inline static const std::string Header = "BM";
         /// Size of header in `BITMAPINFOHEADER`
-        inline static const uint16_t HeaderSize = 40;
-        uint32_t file_size;
-        uint32_t metadata;
-        uint32_t pixel_data_offset;
-        uint32_t image_size;
-        uint32_t x_pixels_per_meter;
-        uint32_t y_pixels_per_meter;
+        inline static const uint32_t HeaderSize = 40;
+        constexpr static const char Metadata[2]{'P', 'J'};
+        uint32_t file_size{};
+        uint32_t pixel_data_offset{};
+        uint32_t image_size{};
+        uint32_t x_pixels_per_meter{};
+        uint32_t y_pixels_per_meter{};
 
         explicit Bmp(const std::string &fileInputPath) {
-            file_size = 0, metadata = 0, pixel_data_offset = 0, image_size = 0, x_pixels_per_meter = 0, y_pixels_per_meter = 0;
+            file_size = 0, pixel_data_offset = 0, image_size = 0, x_pixels_per_meter = 0, y_pixels_per_meter = 0;
             auto fileInputStream = std::ifstream(fileInputPath,
                                                  std::ios_base::binary | std::ios_base::in);
-            char headerTest[2];
-            fileInputStream.get(headerTest, 3);
-            auto headerString = std::string(headerTest);
+            auto headerTest = std::vector<char>(2);
+            fileInputStream.read(headerTest.data(), sizeof(char) * 2);
+            auto headerString = std::string(headerTest.data());
             if (headerString != Header) {
                 std::cerr << "It is not an BMP file! Aborting!" << '\n';
                 exit(1);
             }
-            fileInputStream.get(reinterpret_cast<char *>(&file_size), 5);
-            fileInputStream.get(reinterpret_cast<char *>(&metadata), 5);
-            fileInputStream.get(reinterpret_cast<char *>(&pixel_data_offset), 5);
+            fileInputStream.read(reinterpret_cast<char *>(&file_size), sizeof(uint32_t));
+            auto metadataTest = std::vector<char>(2);
+            fileInputStream.read(reinterpret_cast<char *>(metadataTest.data()), sizeof(uint16_t));
+            if (std::string(metadataTest.data()) == "PJ")
+                fileInputStream.read(reinterpret_cast<char *>(&message_size), sizeof(uint16_t));
+            else {
+                auto index = fileInputStream.tellg().operator+(2);
+                fileInputStream.seekg(index);
+            }
+            fileInputStream.read(reinterpret_cast<char *>(&pixel_data_offset), sizeof(uint32_t));
             uint32_t headerSizeTest = 0;
-            fileInputStream.get(reinterpret_cast<char *>(&headerSizeTest), 5);
+            fileInputStream.read(reinterpret_cast<char *>(&headerSizeTest), sizeof(uint32_t));
             if (headerSizeTest != HeaderSize) {
                 std::cerr << "It is an non-standard BMP file! Aborting!" << '\n';
                 exit(1);
             }
-            fileInputStream.get(reinterpret_cast<char *>(&image_width), 5);
-            fileInputStream.get(reinterpret_cast<char *>(&image_height), 5);
+            fileInputStream.read(reinterpret_cast<char *>(&image_width), sizeof(uint32_t));
+            fileInputStream.read(reinterpret_cast<char *>(&image_height), sizeof(uint32_t));
             uint16_t planesTest = 0;
-            fileInputStream.get(reinterpret_cast<char *>(&planesTest), 3);
+            fileInputStream.read(reinterpret_cast<char *>(&planesTest), sizeof(uint16_t));
             if (planesTest != 1) {
                 std::cerr << "It is an BMP file with more than 1 plane! Aborting!" << '\n';
                 exit(1);
             }
             uint16_t bits_per_pixel;
-            fileInputStream.get(reinterpret_cast<char *>(&bits_per_pixel), 3);
-            max_color_count = std::pow(2, bits_per_pixel);
+            fileInputStream.read(reinterpret_cast<char *>(&bits_per_pixel), sizeof(uint16_t));
+            max_color_count = std::pow(sizeof(uint16_t), bits_per_pixel);
             uint32_t compression_test;
-            fileInputStream.get(reinterpret_cast<char *>(&compression_test), 5);
+            fileInputStream.read(reinterpret_cast<char *>(&compression_test), sizeof(uint32_t));
             if (compression_test != 0) {
                 std::cerr << "It is an compressed BMP file, not supported! Aborting!" << '\n';
                 exit(1);
             }
-            fileInputStream.get(reinterpret_cast<char *>(&image_size), 5);
-            fileInputStream.get(reinterpret_cast<char *>(&x_pixels_per_meter), 5);
-            fileInputStream.get(reinterpret_cast<char *>(&y_pixels_per_meter), 5);
+            fileInputStream.read(reinterpret_cast<char *>(&image_size), sizeof(uint32_t));
+            fileInputStream.read(reinterpret_cast<char *>(&x_pixels_per_meter), sizeof(uint32_t));
+            fileInputStream.read(reinterpret_cast<char *>(&y_pixels_per_meter), sizeof(uint32_t));
             uint32_t total_colors_test = -1, important_colors_test = -1;
-            fileInputStream.get(reinterpret_cast<char *>(&total_colors_test), 5);
-            fileInputStream.get(reinterpret_cast<char *>(&important_colors_test), 5);
+            fileInputStream.read(reinterpret_cast<char *>(&total_colors_test), sizeof(uint32_t));
+            fileInputStream.read(reinterpret_cast<char *>(&important_colors_test), sizeof(uint32_t));
             if (total_colors_test != 0 || important_colors_test != 0) {
                 std::cerr << "It is an colour-indexed BMP file, not supported! Aborting!" << '\n';
                 exit(1);
@@ -186,7 +190,7 @@ namespace image {
 
         auto read_to_pixels_bmp(std::ifstream &fileInputStream) -> void {
             fileInputStream.seekg(pixel_data_offset);
-            for (int i = 0; i < (image_size / 3); ++i) {
+            for (int i = 0; i < (image_size / sizeof(uint16_t)); ++i) {
                 unsigned char red = 0;
                 unsigned char green = 0;
                 unsigned char blue = 0;
@@ -200,44 +204,46 @@ namespace image {
 
         template<typename T>
         void writeBinaryToFileOutputStream(
-                std::basic_ofstream<char> &fileOutputStream, const T& value, uint8_t size) const {
+                std::basic_ofstream<char> &fileOutputStream, const T &value, uint8_t size) const {
             fileOutputStream.write(reinterpret_cast<const char *>(value), size);
         }
 
         auto write_to_file(const std::string &fileOutputPath) -> void override {
-            auto fileOutputStream = std::ofstream(fileOutputPath, std::ios_base::binary);
+            auto fileOutputStream = std::ofstream(fileOutputPath,
+                                                  std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
             uint16_t plane = 1; /// 1 plane
-            uint16_t bits_per_pixel = 24; /// 8 bits * 3 (RGB) = 24 bit/pixel
+            uint16_t bits_per_pixel = 24; /// 8 bits * sizeof(uint16_t) (RGB) = 24 bit/pixel
             uint32_t compression = 0; /// no compression
             /// no colour indexing
             uint32_t total_colors = 0;
             uint32_t important_colors = 0;
-            writeBinaryToFileOutputStream(fileOutputStream, Header.data(), 2);
-            writeBinaryToFileOutputStream(fileOutputStream, &file_size, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &metadata, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &pixel_data_offset, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &HeaderSize, 2);
-            writeBinaryToFileOutputStream(fileOutputStream, &image_width, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &image_height, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &plane, 2);
-            writeBinaryToFileOutputStream(fileOutputStream, &bits_per_pixel, 2);
-            writeBinaryToFileOutputStream(fileOutputStream, &compression, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &image_size, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &x_pixels_per_meter, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &y_pixels_per_meter, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &total_colors, 4);
-            writeBinaryToFileOutputStream(fileOutputStream, &important_colors, 4);
-            std::ranges::sort(pixelsBuffer, [](Pixel pixel1, Pixel pixel2) {
-                if (pixel1.x == pixel2.x)
-                    return pixel1.y > pixel2.y;
-                return pixel2.x > pixel1.x;
-            });
+            std::cout << "Saving to BMP file..." << '\n';
+            writeBinaryToFileOutputStream(fileOutputStream, Header.data(), sizeof(char) * 2);
+            writeBinaryToFileOutputStream(fileOutputStream, &file_size, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &Metadata, sizeof(char) * 2);
+            writeBinaryToFileOutputStream(fileOutputStream, &message_size, sizeof(uint16_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &pixel_data_offset, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &HeaderSize, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &image_width, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &image_height, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &plane, sizeof(uint16_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &bits_per_pixel, sizeof(uint16_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &compression, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &image_size, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &x_pixels_per_meter, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &y_pixels_per_meter, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &total_colors, sizeof(uint32_t));
+            writeBinaryToFileOutputStream(fileOutputStream, &important_colors, sizeof(uint32_t));
             for (image::Pixel pixel: pixelsBuffer) {
-                writeBinaryToFileOutputStream(fileOutputStream, &pixel.red, 1);
-                writeBinaryToFileOutputStream(fileOutputStream, &pixel.green, 1);
-                writeBinaryToFileOutputStream(fileOutputStream, &pixel.blue, 1);
+                uint8_t red_ulong = pixel.red.to_ulong();
+                uint8_t green_ulong = pixel.green.to_ulong();
+                uint8_t blue_ulong = pixel.blue.to_ulong();
+                writeBinaryToFileOutputStream(fileOutputStream, &red_ulong, sizeof(red_ulong));
+                writeBinaryToFileOutputStream(fileOutputStream, &green_ulong, sizeof(green_ulong));
+                writeBinaryToFileOutputStream(fileOutputStream, &blue_ulong, sizeof(blue_ulong));
             }
             fileOutputStream.close();
+            std::cout << "Done!" << '\n';
         }
     };
 }
