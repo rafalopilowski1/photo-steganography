@@ -49,10 +49,11 @@ namespace cli {
                 break;
             case Flag::CHECK:
                 if (args_count == 4) {
-                    auto input_src = args[2];
-                    auto message = args[3];
-                    auto ppmInputFile = image::Bmp(input_src);
-                    std::vector<image::Pixel> &pixelVector = ppmInputFile.get_pixel_vector();
+                    auto input_src = std::string(args[2]);
+                    auto message = std::string(args[3]);
+                    auto inputFile = image::Image::get_image_unique_ptr(
+                            input_src);
+                    std::vector<image::Pixel> &pixelVector = inputFile->get_pixel_vector();
                     cli::check_size_ascii(pixelVector, message);
                 } else {
                     std::cerr << "Bad arguments" << "\n\n";

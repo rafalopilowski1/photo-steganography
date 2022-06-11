@@ -5,15 +5,14 @@
 
 namespace cli {
     auto decode(const std::string &inputFilePath) -> void {
-        // TODO: Switch between formats by counting on file extension
-        auto bmpInputFile = image::Bmp(inputFilePath);
+        auto inputFile = image::Image::get_image_unique_ptr(inputFilePath);
+
         // Soundness check_size_ascii in `has_metadata()` function
-        if (bmpInputFile.has_metadata()) {
+        if (inputFile->has_metadata()) {
             auto message = std::string{};
+            std::vector<image::Pixel> &pixelVector = inputFile->get_pixel_vector();
 
-            std::vector<image::Pixel> &pixelVector = bmpInputFile.get_pixel_vector();
-
-            auto messageLenBits = bmpInputFile.get_message_size();
+            auto messageLenBits = inputFile->get_message_size();
 
             std::cout << "Decoding given file..." << '\n';
 
