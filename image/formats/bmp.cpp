@@ -16,7 +16,7 @@ image::Bmp::Bmp(const std::string &fileInputPath) {
     fileInputStream.read(reinterpret_cast<char *>(&file_size), sizeof(uint32_t));
     auto metadataTest = std::vector<char>(2);
     fileInputStream.read(reinterpret_cast<char *>(metadataTest.data()), sizeof(uint16_t));
-    if (std::string(metadataTest.data()) == "PJ")
+    if (std::string(metadataTest.begin(),metadataTest.end()) == "PJ")
         fileInputStream.read(reinterpret_cast<char *>(&message_size), sizeof(uint16_t));
     else {
         auto index = fileInputStream.tellg().operator+(2);
