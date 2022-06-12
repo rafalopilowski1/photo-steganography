@@ -5,9 +5,7 @@
 
 namespace image {
     /**
-     *
-     * Klasa `Pixel` przechowuje dane o kolorach danego piksela obrazu
-     * @tparam T typ liczby stałoprzecinkowy definiujący ilość bitów przypadający na każdy z kolorów
+     * Klasa `Pixel` przechowuje dane o kolorach danego piksela obrazu oraz jego współrzędnych
      */
     struct Pixel {
     public:
@@ -24,6 +22,11 @@ namespace image {
         Pixel(unsigned int x, unsigned int y, std::bitset<8> red, std::bitset<8> green, std::bitset<8> blue) :
                 x(x), y(y), red(red), green(green), blue(blue) {};
 
+        /**
+         * An operator overload allows us to access the red, green and blue values of a pixel using the [] operator.
+         * @param index index
+         * @return bitset of chosen color
+         */
         std::bitset<8> &operator[](int index) {
             switch (index) {
                 case 0:

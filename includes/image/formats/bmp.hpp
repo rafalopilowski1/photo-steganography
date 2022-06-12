@@ -12,14 +12,31 @@ namespace image {
         uint32_t x_pixels_per_meter{};
         uint32_t y_pixels_per_meter{};
 
+        /**
+         *
+         * @param fileInputPath
+         */
         explicit Bmp(const std::string &fileInputPath);
 
+        /**
+         *
+         * @param fileInputStream
+         */
         auto read_to_pixels_bmp(std::ifstream &fileInputStream) -> void;
-
+        /**
+         *
+         * @tparam T
+         * @param fileOutputStream
+         * @param value
+         * @param size
+         */
         template<typename T>
         void writeBinaryToFileOutputStream(
-                std::basic_ofstream<char> &fileOutputStream, const T &value, uint8_t size) const;
-
+                std::ofstream &fileOutputStream, const T &value, uint8_t size) const;
+        /**
+         *
+         * @param fileOutputPath
+         */
         auto write_to_file(const std::string &fileOutputPath) -> void override;
     };
 }

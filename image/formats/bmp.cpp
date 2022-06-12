@@ -3,6 +3,7 @@
 
 image::Bmp::Bmp(const std::string &fileInputPath) {
     file_size = 0, pixel_data_offset = 0, image_size = 0, x_pixels_per_meter = 0, y_pixels_per_meter = 0;
+    image_type = ImageType::BMP;
     auto fileInputStream = std::ifstream(fileInputPath,
                                          std::ios_base::binary | std::ios_base::in);
     auto headerTest = std::vector<char>(2);
@@ -26,8 +27,7 @@ image::Bmp::Bmp(const std::string &fileInputPath) {
     uint32_t headerSizeTest = 0;
     fileInputStream.read(reinterpret_cast<char *>(&headerSizeTest), sizeof(uint32_t));
     if (headerSizeTest != HeaderSize) {
-        std::cerr << "It is an non-standard BMP file! Aborting!" << '\n';
-        exit(1);
+        std::cerr << "WARNING: It is an non-standard BMP file! All additional metadata fields will be omitted!" << '\n';
     }
     fileInputStream.read(reinterpret_cast<char *>(&image_width), sizeof(uint32_t));
     fileInputStream.read(reinterpret_cast<char *>(&image_height), sizeof(uint32_t));

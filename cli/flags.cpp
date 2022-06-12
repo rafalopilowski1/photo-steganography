@@ -18,6 +18,8 @@ namespace cli {
             return Flag::CHECK;
         if (str == "-i" || str == "--info")
             return Flag::INFO;
+        if (str != "-h" && str != "--help")
+            std::cerr << "No such flag!: " << str << '\n';
         return Flag::HELP;
     }
 

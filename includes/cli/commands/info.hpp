@@ -1,4 +1,8 @@
 #pragma once
 namespace cli {
-    auto info(std::string string) -> void;
+    /**
+     *
+     * @param string
+     */
+    auto info(const std::string& fileInputFormat) -> void;
 }

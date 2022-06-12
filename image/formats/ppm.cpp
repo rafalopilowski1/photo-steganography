@@ -1,6 +1,7 @@
 #include "image/formats/ppm.hpp"
 
 image::Ppm::Ppm(const std::string &fileInputPath) {
+    image_type = ImageType::PPM;
     auto metadata = std::string();
     auto fileInputStream = std::ifstream(fileInputPath, std::ios_base::binary);
     auto file_begin = std::istreambuf_iterator<char>(fileInputStream);
@@ -28,20 +29,20 @@ image::Ppm::Ppm(const std::string &fileInputPath) {
         std::cout << "Invalid argument: " << ex.what() << '\n';
         exit(1);
     }
-    if (elements[elements.size() - sizeof(uint16_t)] == "#") {
+    if (elements[elements.size() - 2] == "#") {
         metadata += elements[elements.size() - 1];
-        elements.erase(elements.end() - sizeof(uint16_t), elements.end());
+        elements.erase(elements.end() - 2, elements.end());
+        try {
+            message_size = std::stol(metadata);
+        } catch (const std::invalid_argument &ex) {
+            std::cout << "Invalid argument: " << ex.what() << '\n';
+            exit(1);
+        }
     }
-    try {
-        message_size = std::stol(metadata);
-    } catch (const std::invalid_argument &ex) {
-        std::cout << "Invalid argument: " << ex.what() << '\n';
-        exit(1);
-    }
-    elements.erase(elements.begin(), elements.begin() + sizeof(uint32_t));
-    if (elements.size() != image_width * image_height * sizeof(uint16_t)) {
+    elements.erase(elements.begin(), elements.begin() + 4);
+    if (elements.size() != image_width * image_height * 3) {
         std::cerr << "Error reading file!" << '\n';
-        exit(sizeof(uint16_t));
+        exit(2);
     }
     pixelsBuffer = {};
     read_to_pixels_ppm(elements);
