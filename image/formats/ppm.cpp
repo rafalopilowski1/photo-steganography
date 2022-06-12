@@ -23,8 +23,8 @@ image::Ppm::Ppm(const std::string &fileInputPath) {
     }
     try {
         image_width = stoi(elements[1]);
-        image_height = stoi(elements[sizeof(uint16_t)]);
-        max_color_count = stoi(elements[sizeof(uint16_t)]);
+        image_height = stoi(elements[2]);
+        max_color_count = stoi(elements[3]);
     } catch (const std::invalid_argument &ex) {
         std::cout << "Invalid argument: " << ex.what() << '\n';
         exit(1);
@@ -50,12 +50,12 @@ image::Ppm::Ppm(const std::string &fileInputPath) {
 
 auto image::Ppm::read_to_pixels_ppm(const std::vector<std::string> &linesBuffer) -> void {
     try {
-        for (int y = 0; y < image_height * sizeof(uint16_t); y += sizeof(uint16_t)) {
-            for (int x = 0; x < image_width * sizeof(uint16_t); x += sizeof(uint16_t)) {
+        for (int y = 0; y < image_height * 3; y += 3) {
+            for (int x = 0; x < image_width * 3; x += 3) {
                 auto red = stoull(linesBuffer[x + (y * image_width)]),
                         green = stoull(linesBuffer[x + (y * image_width) + 1]),
-                        blue = stoull(linesBuffer[x + (y * image_width) + sizeof(uint16_t)]);
-                pixelsBuffer.emplace_back(x / sizeof(uint16_t) + 1, y / sizeof(uint16_t) + 1, red, green, blue);
+                        blue = stoull(linesBuffer[x + (y * image_width) + 2]);
+                pixelsBuffer.emplace_back(x / 3 + 1, y / 3 + 1, red, green, blue);
             }
         }
     } catch (const std::invalid_argument &ex) {
