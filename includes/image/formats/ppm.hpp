@@ -3,7 +3,7 @@
 
 namespace image {
     struct Ppm : image::Image {
-        constexpr static const char Header[2]{'P', '3'};
+        const std::string Header="P3";
         /**
          *
          * @param fileInputPath

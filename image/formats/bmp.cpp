@@ -9,8 +9,7 @@ image::Bmp::Bmp(const std::string &fileInputPath) {
     auto headerTest = std::vector<char>(2);
     fileInputStream.read(headerTest.data(), sizeof(char) * 2);
     auto headerTestString = std::string(headerTest.begin(), headerTest.end());
-    auto headerString = std::string(Header);
-    if (headerTestString != headerString) {
+    if (headerTestString != Header) {
         std::cerr << "It is not an BMP file! Aborting!" << '\n';
         exit(1);
     }
@@ -26,8 +25,9 @@ image::Bmp::Bmp(const std::string &fileInputPath) {
     fileInputStream.read(reinterpret_cast<char *>(&pixel_data_offset), sizeof(uint32_t));
     uint32_t headerSizeTest = 0;
     fileInputStream.read(reinterpret_cast<char *>(&headerSizeTest), sizeof(uint32_t));
-    if (headerSizeTest != HeaderSize) {
+    if (headerSizeTest != ImageInformationDataHeaderSize) {
         std::cerr << "WARNING: It is an non-standard BMP file! All additional metadata fields will be omitted!" << '\n';
+//        exit(0);
     }
     fileInputStream.read(reinterpret_cast<char *>(&image_width), sizeof(uint32_t));
     fileInputStream.read(reinterpret_cast<char *>(&image_height), sizeof(uint32_t));
@@ -70,13 +70,15 @@ auto image::Bmp::write_to_file(const std::string &fileOutputPath) -> void {
     /// no colour indexing
     uint32_t total_colors = 0;
     uint32_t important_colors = 0;
+    pixel_data_offset = ImageInformationDataHeaderSize + FileTypeDataHeaderSize;
+    file_size = pixel_data_offset + image_size;
     std::cout << "Saving to BMP file..." << '\n';
-    writeBinaryToFileOutputStream(fileOutputStream, &Header, sizeof(char) * 2);
+    writeBinaryToFileOutputStream(fileOutputStream, Header.data(), sizeof(char) * 2);
     writeBinaryToFileOutputStream(fileOutputStream, &file_size, sizeof(uint32_t));
-    writeBinaryToFileOutputStream(fileOutputStream, &Metadata, sizeof(char) * 2);
+    writeBinaryToFileOutputStream(fileOutputStream, Metadata.data(), sizeof(char) * 2);
     writeBinaryToFileOutputStream(fileOutputStream, &message_size, sizeof(uint16_t));
     writeBinaryToFileOutputStream(fileOutputStream, &pixel_data_offset, sizeof(uint32_t));
-    writeBinaryToFileOutputStream(fileOutputStream, &HeaderSize, sizeof(uint32_t));
+    writeBinaryToFileOutputStream(fileOutputStream, &ImageInformationDataHeaderSize, sizeof(uint32_t));
     writeBinaryToFileOutputStream(fileOutputStream, &image_width, sizeof(uint32_t));
     writeBinaryToFileOutputStream(fileOutputStream, &image_height, sizeof(uint32_t));
     writeBinaryToFileOutputStream(fileOutputStream, &plane, sizeof(uint16_t));
@@ -101,7 +103,7 @@ auto image::Bmp::write_to_file(const std::string &fileOutputPath) -> void {
 
 auto image::Bmp::read_to_pixels_bmp(std::ifstream &fileInputStream) -> void {
     fileInputStream.seekg(pixel_data_offset);
-    for (int i = 0; i < (image_size / sizeof(uint16_t)); ++i) {
+    for (int i = 0; i < (image_width*image_height); ++i) {
         unsigned char red = fileInputStream.get();
         unsigned char green = fileInputStream.get();
         unsigned char blue = fileInputStream.get();

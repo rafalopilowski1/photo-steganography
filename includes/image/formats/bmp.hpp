@@ -2,10 +2,11 @@
 #include "image/image.hpp"
 namespace image {
     struct Bmp : image::Image {
-        constexpr static const char Header[2]{'B','M'};
+        const std::string Header="BM";
         /// Size of header in `BITMAPINFOHEADER`
-        inline static const uint32_t HeaderSize = 40;
-        constexpr static const char Metadata[2]{'P','J'};
+        inline static const uint32_t ImageInformationDataHeaderSize = 40;
+        inline static const uint32_t FileTypeDataHeaderSize = 14;
+        const std::string Metadata="PJ";
         uint32_t file_size{};
         uint32_t pixel_data_offset{};
         uint32_t image_size{};
