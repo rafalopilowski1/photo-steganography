@@ -24,16 +24,7 @@ namespace image {
          * @param fileInputStream
          */
         auto read_to_pixels_bmp(std::ifstream &fileInputStream) -> void;
-        /**
-         *
-         * @tparam T
-         * @param fileOutputStream
-         * @param value
-         * @param size
-         */
-        template<typename T>
-        void writeBinaryToFileOutputStream(
-                std::ofstream &fileOutputStream, const T &value, uint8_t size) const;
+
         /**
          *
          * @param fileOutputPath
