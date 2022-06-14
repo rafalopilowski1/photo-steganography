@@ -3,14 +3,17 @@
 #include <string>
 #include <vector>
 
+using Image = image::Image;
+using Pixel = image::Pixel;
+
 namespace cli {
     auto decode(const std::string &inputFilePath) -> void {
-        auto inputFile = image::Image::get_image_unique_ptr(inputFilePath);
+        auto inputFile = Image::get_image_unique_ptr(inputFilePath);
 
         // Soundness check_size_ascii in `has_metadata()` function
         if (inputFile->has_metadata()) {
             auto message = std::string{};
-            std::vector<image::Pixel> &pixelVector = inputFile->get_pixel_vector();
+            std::vector<Pixel> &pixelVector = inputFile->get_pixel_vector();
 
             auto messageLenBits = inputFile->get_message_size();
 

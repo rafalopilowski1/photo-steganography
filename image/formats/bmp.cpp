@@ -1,7 +1,8 @@
 #include "image/formats/bmp.hpp"
 #include "utils/utils.hpp"
+using Bmp = image::Bmp;
 
-image::Bmp::Bmp(const std::string &fileInputPath) {
+Bmp::Bmp(const std::string &fileInputPath) {
     file_size = 0, pixel_data_offset = 0, image_size = 0, x_pixels_per_meter = 0, y_pixels_per_meter = 0;
     image_type = ImageType::BMP;
 
@@ -79,7 +80,7 @@ image::Bmp::Bmp(const std::string &fileInputPath) {
 }
 
 
-auto image::Bmp::write_to_file(const std::string &fileOutputPath) -> void {
+auto Bmp::write_to_file(const std::string &fileOutputPath) -> void {
     auto fileOutputStream = std::ofstream(fileOutputPath,
                                           std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
     uint16_t plane = 1; /// 1 plane
@@ -119,7 +120,7 @@ auto image::Bmp::write_to_file(const std::string &fileOutputPath) -> void {
     std::cout << "Done!" << '\n';
 }
 
-auto image::Bmp::read_to_pixels_bmp(std::ifstream &fileInputStream) -> void {
+auto Bmp::read_to_pixels_bmp(std::ifstream &fileInputStream) -> void {
     fileInputStream.seekg(pixel_data_offset);
     for (int i = 0; i < (image_width * image_height); ++i) {
         unsigned char red = fileInputStream.get();

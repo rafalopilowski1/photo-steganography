@@ -1,6 +1,8 @@
 #include "image/formats/ppm.hpp"
 
-image::Ppm::Ppm(const std::string &fileInputPath) {
+using Ppm = image::Ppm;
+
+Ppm::Ppm(const std::string &fileInputPath) {
     image_type = ImageType::PPM;
     auto metadata = std::string();
     auto fileInputStream = std::ifstream(fileInputPath, std::ios_base::binary);
@@ -48,7 +50,7 @@ image::Ppm::Ppm(const std::string &fileInputPath) {
     read_to_pixels_ppm(elements);
 }
 
-auto image::Ppm::read_to_pixels_ppm(const std::vector<std::string> &linesBuffer) -> void {
+auto Ppm::read_to_pixels_ppm(const std::vector<std::string> &linesBuffer) -> void {
     try {
         for (int y = 0; y < image_height * 3; y += 3) {
             for (int x = 0; x < image_width * 3; x += 3) {
@@ -64,7 +66,7 @@ auto image::Ppm::read_to_pixels_ppm(const std::vector<std::string> &linesBuffer)
     }
 }
 
-auto image::Ppm::write_to_file(const std::string &fileOutputPath) -> void {
+auto Ppm::write_to_file(const std::string &fileOutputPath) -> void {
     auto fileOutputStream = std::ofstream(fileOutputPath, std::ios_base::binary);
     fileOutputStream << "P3" << '\n';
     fileOutputStream << image_width << ' ' << image_height << '\n';

@@ -5,12 +5,15 @@
 #include <string>
 #include <vector>
 
+using Image = image::Image;
+using Pixel = image::Pixel;
+
 namespace cli {
     auto encode(const std::string &inputFilePath, const std::string &outputFilePath,
                 const std::string &message) -> void {
-        auto inputFile = image::Image::get_image_unique_ptr(
+        auto inputFile = Image::get_image_unique_ptr(
                 inputFilePath);
-        std::vector<image::Pixel> &pixelVector = inputFile->get_pixel_vector();
+        std::vector<Pixel> &pixelVector = inputFile->get_pixel_vector();
         if (check_size_ascii(pixelVector, message)) {
             std::vector<std::bitset<8>> message_bytes{};
             for (char el: message)
