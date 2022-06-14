@@ -6,7 +6,7 @@
 
 namespace utils {
     template<typename I>
-    requires std::integral<unsigned int>
+    requires std::integral<I>
     auto reverse_bytes(I integer) -> I {
         I out = 0;
         /// for each byte in integer
@@ -29,7 +29,7 @@ namespace utils {
     }
 
     template<typename I>
-    requires std::integral<unsigned int>
+    requires std::integral<I>
     auto read_number_from_file(std::basic_ifstream<char> &fileInputStream,
                                I *buffer) -> void {
         fileInputStream.read(reinterpret_cast<char *>(buffer), sizeof(I));
