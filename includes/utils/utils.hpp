@@ -43,7 +43,7 @@ namespace utils {
     }
 
     template<typename I>
-    requires std::integral<unsigned int>
+    requires std::integral<I>
     auto write_number_to_file_output_stream(std::basic_ofstream<char> &fileOutputStream, const I *value) -> void {
         fileOutputStream.write(reinterpret_cast<const char *>(value), sizeof(I));
     }
