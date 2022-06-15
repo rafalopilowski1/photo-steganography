@@ -11,8 +11,8 @@ namespace cli {
     auto decode(const std::string &inputFilePath) -> void {
         auto inputFile = Image::get_image_unique_ptr(inputFilePath);
 
-        // Soundness check_size_ascii in `has_metadata()` function
-        if (inputFile->has_metadata()) {
+        // Soundness check_size_ascii in `has_message()` function
+        if (inputFile->has_message()) {
             auto message = std::string{};
             std::vector<Pixel> &pixelVector = inputFile->get_pixel_vector();
 
@@ -40,4 +40,4 @@ namespace cli {
             exit(0);
         }
     }
-} // namespace cli
+}

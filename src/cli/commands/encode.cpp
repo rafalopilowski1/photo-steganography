@@ -29,4 +29,4 @@ namespace cli {
             inputFile->write_to_file(outputFilePath);
         };
     }
-} // namespace cli
+}

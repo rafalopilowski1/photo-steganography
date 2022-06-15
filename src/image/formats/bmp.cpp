@@ -80,7 +80,6 @@ Bmp::Bmp(const std::string &fileInputPath) {
     fileInputStream.close();
 }
 
-
 auto Bmp::write_to_file(const std::string &fileOutputPath) -> void {
     auto fileOutputStream = std::ofstream(fileOutputPath,
                                           std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
@@ -120,7 +119,6 @@ auto Bmp::write_to_file(const std::string &fileOutputPath) -> void {
     fileOutputStream.close();
     std::cout << "Done!" << '\n';
 }
-
 auto Bmp::read_to_pixels_bmp(std::ifstream &fileInputStream) -> void {
     fileInputStream.seekg(pixel_data_offset);
     for (int i = 0; i < (image_width * image_height); ++i) {

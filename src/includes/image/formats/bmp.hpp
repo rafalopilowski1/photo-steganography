@@ -16,20 +16,20 @@ namespace image {
         uint32_t y_pixels_per_meter{};
 
         /**
-         *
-         * @param fileInputPath
+         * Konstructor klasy obrazu BMP, który odczytuje podstawowe informacje o obrazie
+         * @param fileInputPath Ścieżka do pliku wejściowego
          */
         explicit Bmp(const std::string &fileInputPath);
 
         /**
-         *
-         * @param fileInputStream
+         * Funkcja zczytująca z pliku BMP `Pixel`-e
+         * @param fileInputStream Strumień pliku wejściowego
          */
         auto read_to_pixels_bmp(std::ifstream &fileInputStream) -> void;
 
         /**
-         *
-         * @param fileOutputPath
+         * Funkcja zapisująca obraz do pliku w formacie BMP
+         * @param fileOutputPath Ścieżka do pliku wyjściowego
          */
         auto write_to_file(const std::string &fileOutputPath) -> void override;
     };

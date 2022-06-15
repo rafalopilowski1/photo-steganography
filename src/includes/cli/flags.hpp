@@ -4,7 +4,7 @@
 
 namespace cli {
     /**
-     *
+     * Enumerator po rodzajach funkcjonalności programu
      */
     enum class Flag {
         HELP,
@@ -13,16 +13,18 @@ namespace cli {
         CHECK,
         INFO
     };
+
     /**
-     *
+     * Funkcja zczytująca `string` to enumeratora `Flag`
      * @param str
      * @return
      */
     auto string_to_enum(const std::string & str) -> Flag;
+
     /**
-     *
-     * @param args_count
-     * @param args
+     * Główna funkcja uruchamiająca program
+     * @param args_count Ilość argumentów
+     * @param args Wskaźnik do tablicy `char`-ów, przechowywująca argumenty
      */
     auto run(int args_count,char* args[]) -> void;
 }
