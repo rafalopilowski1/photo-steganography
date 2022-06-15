@@ -12,7 +12,14 @@ namespace cli {
         auto path = std::filesystem::path(fileInputPath).filename();
         auto file_size = std::filesystem::file_size(fileInputPath);
         auto file_modtime = std::filesystem::last_write_time(fileInputPath);
-        auto file_last_time = std::chrono::system_clock::to_time_t(std::chrono::file_clock::to_sys(file_modtime));
+
+        /// Ugly macro to detect different implementations of `std::chrono`
+        #ifdef _MSC_VER /// for MSVC
+            auto file_last_time = std::chrono::system_clock::to_time_t(
+                    std::chrono::utc_clock::to_sys(std::chrono::file_clock::to_utc(file_modtime)));
+        #else /// for everything else
+            auto file_last_time = std::chrono::system_clock::to_time_t(std::chrono::file_clock::to_sys(file_modtime));
+        #endif
 
         auto format_string = std::string();
         if (inputFile->image_type == image::ImageType::BMP)

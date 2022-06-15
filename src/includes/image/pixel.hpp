@@ -39,7 +39,7 @@ namespace image {
                 x(x), y(y), red(red), green(green), blue(blue) {};
 
         /**
-         * Nadpisanie operatora indeksowania, który pozwala za pomocą indeksu zwrócić referencę do `bitset`-u odpowiedniego koloru
+         * Nadpisanie operatora indeksowania, który pozwala za pomocą indeksu zwrócić referencję do `bitset`-u odpowiedniego koloru
          * @param index Indeks
          * @return Referencja do `bitset`-u wybranego koloru
          */

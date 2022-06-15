@@ -11,7 +11,7 @@ Ppm::Ppm(const std::string &fileInputPath) {
     auto buffer_string = std::string(file_begin, file_end);
     fileInputStream.close();
     if (fileInputStream.fail()) {
-        std::cerr << "Fail with file: " << to_string(fileInputStream.exceptions()) << '\n';
+        std::cerr << "Fail with file: " << std::to_string(fileInputStream.exceptions()) << '\n';
         exit(0);
     }
     std::stringstream string_stream(buffer_string);
