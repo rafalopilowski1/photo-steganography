@@ -30,11 +30,10 @@ namespace cli {
                 cli::help();
                 break;
             case Flag::ENCODE:
-                if (args_count == 5) {
+                if (args_count == 4) {
                     auto input_src = args[2];
-                    auto output_src = args[3];
-                    auto message = args[4];
-                    cli::encode(input_src, output_src, message);
+                    auto message = args[3];
+                    cli::encode(input_src, input_src, message);
                 } else {
                     std::cerr << "Bad arguments" << "\n\n";
                     cli::help();

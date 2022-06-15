@@ -65,7 +65,7 @@ Bmp::Bmp(const std::string &fileInputPath) {
 
     utils::read_number_from_file(fileInputStream, &y_pixels_per_meter);
 
-    uint32_t total_colors_test = -1, important_colors_test = -1;
+    uint32_t total_colors_test, important_colors_test;
     utils::read_number_from_file(fileInputStream, &total_colors_test);
     utils::read_number_from_file(fileInputStream, &important_colors_test);
 
@@ -125,7 +125,7 @@ auto Bmp::read_to_pixels_bmp(std::ifstream &fileInputStream) -> void {
         unsigned char red = fileInputStream.get();
         unsigned char green = fileInputStream.get();
         unsigned char blue = fileInputStream.get();
-        pixelsBuffer.emplace_back((i % image_width), image_height - (i / image_height), std::bitset<8>(red),
+        pixelsBuffer.emplace_back((i % image_width), image_height - (i / image_width), std::bitset<8>(red),
                                   std::bitset<8>(green), std::bitset<8>(blue));
     }
 }
