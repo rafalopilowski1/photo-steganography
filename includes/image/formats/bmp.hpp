@@ -1,5 +1,7 @@
 #pragma once
+
 #include "image/image.hpp"
+
 namespace image {
     struct Bmp : image::Image {
         const std::string Header="BM";

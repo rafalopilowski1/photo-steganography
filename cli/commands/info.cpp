@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+
 #include "image/image.hpp"
 
 namespace cli {

@@ -1,5 +1,6 @@
 #include "image/formats/bmp.hpp"
 #include "utils/utils.hpp"
+
 using Bmp = image::Bmp;
 
 Bmp::Bmp(const std::string &fileInputPath) {

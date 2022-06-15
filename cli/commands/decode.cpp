@@ -1,7 +1,8 @@
-#include "image/image.hpp"
-#include "image/pixel.hpp"
 #include <string>
 #include <vector>
+
+#include "image/image.hpp"
+#include "image/pixel.hpp"
 
 using Image = image::Image;
 using Pixel = image::Pixel;
@@ -31,7 +32,7 @@ namespace cli {
                 buf.set(i % 8, bit);
             }
             std::cout << "Done!"
-                      << "\n";
+                    << "\n";
             std::cout << "Decrypted message:\n\n" << message << '\n';
 
         } else {

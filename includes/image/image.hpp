@@ -8,9 +8,14 @@
 #include <cmath>
 #include <algorithm>
 #include <filesystem>
+
 #include "image/pixel.hpp"
 
 namespace image {
+    using Pixel = image::Pixel;
+
+    auto check_size_ascii(const std::vector<Pixel> &pixelVector, const std::string &message) -> bool;
+
     enum class ImageType {
         NotSupported, BMP, PPM
     };
@@ -21,9 +26,11 @@ namespace image {
         double max_color_count{};
         uint16_t message_size{};
         image::ImageType image_type{};
-        std::vector<image::Pixel> pixelsBuffer;
+        std::vector<Pixel> pixelsBuffer;
 
         Image() = default;
+
+        virtual ~Image() = default;
 
         /**
          *
@@ -70,7 +77,7 @@ namespace image {
          */
         virtual auto write_to_file(const std::string &fileOutputPath) -> void = 0;
 
-        virtual ~Image();
+
     };
 
 }

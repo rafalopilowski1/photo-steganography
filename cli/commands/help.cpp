@@ -1,4 +1,5 @@
 #include <iostream>
+
 namespace cli {
     auto help() -> void {
         auto intro = "PST (Photo Steganography Tool)";
