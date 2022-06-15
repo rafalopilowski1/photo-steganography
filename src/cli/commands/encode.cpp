@@ -1,7 +1,6 @@
 #include "cli/commands/check.hpp"
 #include "image/image.hpp"
 
-#include <chrono>
 #include <string>
 #include <vector>
 
