@@ -13,15 +13,6 @@
 
 namespace image {
     using Pixel = image::Pixel;
-
-    /**
-     * Funckja sprawdzająca, czy ciąg znaków ASCII zmieści się w ostatnich bitach koloru w `Pixel`-ach
-     * @param pixelVector Referencja tylko do odczytu wektora `Pixel`-i
-     * @param message Wiadomość do zakodowania
-     * @return `true` - da się, `false` - nie da sie
-     */
-    auto check_size_ascii(const std::vector<Pixel> &pixelVector, const std::string &message) -> bool;
-
     /**
      * Enumerator po typach obsługiwanych obrazów
      */
@@ -29,6 +20,16 @@ namespace image {
     enum class ImageType {
         NotSupported, BMP, PPM
     };
+
+    /**
+     * Funckja sprawdzająca, czy ciąg znaków ASCII zmieści się w ostatnich bitach koloru w `Pixel`-ach
+     * @param pixelVector Referencja tylko do odczytu wektora `Pixel`-i
+     * @param message Wiadomość do zakodowania
+     * @param imageType Typ obrazu
+     * @return `true` - da się, `false` - nie da sie
+     */
+    auto check_size_ascii(const std::vector<Pixel> &pixelVector, const std::string &message,
+                          const ImageType &imageType) -> bool;
 
     /**
      * Struktura przechowywująca podstawowe informacje o obrazie

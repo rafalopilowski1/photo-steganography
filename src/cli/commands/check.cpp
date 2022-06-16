@@ -8,7 +8,7 @@ namespace cli {
         auto inputFile = image::Image::get_image_unique_ptr(
                 input_src);
         std::vector<image::Pixel> &pixelVector = inputFile->get_pixel_vector();
-        image::check_size_ascii(pixelVector, message);
+        image::check_size_ascii(pixelVector, message, inputFile->image_type);
     }
 
 }

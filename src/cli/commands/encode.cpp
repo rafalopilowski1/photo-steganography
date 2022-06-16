@@ -13,7 +13,7 @@ namespace cli {
         auto inputFile = Image::get_image_unique_ptr(
                 inputFilePath);
         std::vector<Pixel> &pixelVector = inputFile->get_pixel_vector();
-        if (image::check_size_ascii(pixelVector, message)) {
+        if (image::check_size_ascii(pixelVector, message, inputFile->image_type)) {
             std::vector<std::bitset<8>> message_bytes{};
             for (char el: message)
                 message_bytes.emplace_back(el);
