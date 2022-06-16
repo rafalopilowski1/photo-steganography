@@ -1,8 +1,9 @@
 # Project-specific
 
-cmake-build-debug/*
-cmake-build-release/*
-cmake-build-relwithdebinfo/*
+.idea
+cmake-build-debug
+cmake-build-release
+cmake-build-relwithdebinfo
 test.*
 *.ppm
 
