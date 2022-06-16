@@ -8,6 +8,10 @@
 - `-c <path_to_file> <message>`: Checks if message can be encoded in image
 - `-i <path_to_file>`: Prints out image metadata
 
+## Supported formats
+- P3 PPM
+- BMP
+
 ## Compatibility table
 
 |      Tested with:       | Footnotes |
