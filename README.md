@@ -12,11 +12,11 @@
 
 |      Tested with:       | Footnotes |
 |:-----------------------:|:---------:|
-| MSVC ver. 142 (VS 2019) |           |
+| MSVC ver. 142 (VS 2019) |     -     |
 | MSVC `clang-cl` 12.0.0  |    1.     |
-|       MinGW 11.0        |           |
-|       GCC 12.1.1        |           |
-|       Clang 14.0        |           |
+|        MinGW 9.0        |     -     |
+|       GCC 12.1.1        |     -     |
+|       Clang 14.0        |     -     |
 
 ### Footnotes
 
