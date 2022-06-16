@@ -11,7 +11,7 @@ using Image = image::Image;
 auto image::check_size_ascii(const std::vector<image::Pixel> &pixelVector, const std::string &message,
                              const ImageType &imageType) -> bool {
     auto messageLenBits = message.size() * 8;
-    /// Zapisywanie w formacie BMP ma ograniczenie 64 MB - ograniczenia pola `Metadata`
+    /// Zapisywanie w formacie BMP ma ograniczenie ~8kB - ograniczenia pola `Metadata`
     auto imageSizePotencial = imageType == ImageType::PPM ? (pixelVector.size() * 3) : (65535);
     if (messageLenBits <= imageSizePotencial) {
         std::cout << "Given message (" << messageLenBits << " bits) can be written into this image ("
