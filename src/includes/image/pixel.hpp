@@ -24,8 +24,7 @@ namespace image {
          * @param green
          * @param blue
          */
-        Pixel(unsigned int x, unsigned int y, uint8_t red, uint8_t green, uint8_t blue) :
-                x(x), y(y), red(red), green(green), blue(blue) {};
+        Pixel(unsigned int x, unsigned int y, uint8_t red, uint8_t green, uint8_t blue);
 
         /**
          * Konstruktor `Pixel` przyjmujący za wartości kolorów zestaw 8 bitów
@@ -35,26 +34,13 @@ namespace image {
          * @param green
          * @param blue
          */
-        Pixel(unsigned int x, unsigned int y, std::bitset<8> red, std::bitset<8> green, std::bitset<8> blue) :
-                x(x), y(y), red(red), green(green), blue(blue) {};
+        Pixel(unsigned int x, unsigned int y, std::bitset<8> red, std::bitset<8> green, std::bitset<8> blue);
 
         /**
          * Nadpisanie operatora indeksowania, który pozwala za pomocą indeksu zwrócić referencję do `bitset`-u odpowiedniego koloru
          * @param index Indeks
          * @return Referencja do `bitset`-u wybranego koloru
          */
-        std::bitset<8> &operator[](int index) {
-            switch (index) {
-                case 0:
-                    return red;
-                case 1:
-                    return green;
-                case 2:
-                    return blue;
-                default:
-                    std::cerr << "Wrong index!!!" << '\n';
-                    exit(0);
-            }
-        }
+        std::bitset<8> &operator[](int index);
     };
 }

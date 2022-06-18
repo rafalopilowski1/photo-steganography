@@ -17,7 +17,7 @@ namespace cli {
     /**
      * Funkcja zczytująca `string` to enumeratora `Flag`
      * @param str
-     * @return
+     * @return Flaga CLI
      */
     auto string_to_enum(const std::string & str) -> Flag;
 
