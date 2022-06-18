@@ -19,7 +19,7 @@ namespace cli {
         if (str == "-i" || str == "--info")
             return Flag::INFO;
         if (str != "-h" && str != "--help")
-            std::cerr << "No such flag!: " << str << '\n';
+            std::cerr << "No such flag!: " << str << "\n\n";
         return Flag::HELP;
     }
 
@@ -35,7 +35,7 @@ namespace cli {
                     auto message = args[3];
                     cli::encode(input_src, input_src, message);
                 } else {
-                    std::cerr << "Bad arguments" << "\n\n";
+                    std::cerr << "Invalid arguments for encode!" << "\n\n";
                     cli::help();
                 }
                 break;
@@ -44,7 +44,7 @@ namespace cli {
                     auto input_src = args[2];
                     cli::decode(input_src);
                 } else {
-                    std::cerr << "Bad arguments" << "\n\n";
+                    std::cerr << "Invalid arguments for decode!" << "\n\n";
                     cli::help();
                 }
                 break;
@@ -54,7 +54,7 @@ namespace cli {
                     auto message = args[3];
                     cli::check(input_src, message);
                 } else {
-                    std::cerr << "Bad arguments" << "\n\n";
+                    std::cerr << "Invalid arguments for check!" << "\n\n";
                     cli::help();
                 }
                 break;
@@ -63,7 +63,7 @@ namespace cli {
                     auto input_src = args[2];
                     cli::info(input_src);
                 } else {
-                    std::cerr << "Bad arguments" << "\n\n";
+                    std::cerr << "Invalid arguments for info!" << "\n\n";
                     cli::help();
                 }
                 break;

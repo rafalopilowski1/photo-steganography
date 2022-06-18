@@ -8,6 +8,12 @@
 - `-c <path_to_file> <message>`: Checks if message can be encoded in image
 - `-i <path_to_file>`: Prints out image metadata
 
+You can also use extended flags:
+- `-h` = `--help`
+- `-e` = `--encode`
+- `-d` = `--decode`
+- `-c` = `--check`
+- `-i` = `--info`
 ## Supported formats
 
 - P3 PPM
