@@ -16,7 +16,7 @@ namespace cli {
             // Soundness check_size_ascii in `has_message()` function
             if (inputFile->has_message()) {
                 auto message = std::string{};
-                std::vector<Pixel> &pixelVector = inputFile->get_pixel_vector();
+                const std::vector<Pixel> &pixelVector = inputFile->get_pixel_vector();
 
                 auto messageLenBits = inputFile->get_message_size();
 

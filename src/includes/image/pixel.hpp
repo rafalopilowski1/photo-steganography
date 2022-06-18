@@ -42,5 +42,6 @@ namespace image {
          * @return Referencja do `bitset`-u wybranego koloru
          */
         std::bitset<8> &operator[](int index);
+        const std::bitset<8>& operator[](int index) const;
     };
 }

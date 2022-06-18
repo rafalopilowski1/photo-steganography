@@ -23,4 +23,18 @@ namespace image {
                 exit(0);
         }
     }
+
+    const std::bitset<8>& Pixel::operator[](int index) const {
+        switch (index) {
+            case 0:
+                return red;
+            case 1:
+                return green;
+            case 2:
+                return blue;
+            default:
+                std::cerr << "Wrong index!!!" << '\n';
+                exit(0);
+        }
+    }
 }

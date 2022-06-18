@@ -10,7 +10,7 @@ Bmp::Bmp(const std::string &fileInputPath) {
     auto fileInputStream = std::ifstream(fileInputPath,
                                          std::ios_base::binary | std::ios_base::in);
 
-    auto headerTest = utils::read_string_from_file(fileInputStream, 2);
+    const auto headerTest = utils::read_string_from_file(fileInputStream, 2);
     if (headerTest != Header) {
         std::cerr << "It is not an BMP file! Aborting!" << '\n';
         exit(1);
@@ -18,7 +18,7 @@ Bmp::Bmp(const std::string &fileInputPath) {
 
     utils::read_number_from_file(fileInputStream, &file_size);
 
-    auto metadataTest = utils::read_string_from_file(fileInputStream, 2);
+    const auto metadataTest = utils::read_string_from_file(fileInputStream, 2);
     if (metadataTest == "PJ")
         utils::read_number_from_file(fileInputStream, &message_size);
     else {
@@ -83,12 +83,12 @@ Bmp::Bmp(const std::string &fileInputPath) {
 auto Bmp::write_to_file(const std::string &fileOutputPath) -> void {
     auto fileOutputStream = std::ofstream(fileOutputPath,
                                           std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
-    uint16_t plane = 1; // 1 plane
-    uint16_t bits_per_pixel = 24; // 8 bits * sizeof(uint16_t) (RGB) = 24 bit/pixel
-    uint32_t compression = 0; // no compression
+    const uint16_t plane = 1; // 1 plane
+    const uint16_t bits_per_pixel = 24; // 8 bits * sizeof(uint16_t) (RGB) = 24 bit/pixel
+    const uint32_t compression = 0; // no compression
     // no colour indexing
-    uint32_t total_colors = 0;
-    uint32_t important_colors = 0;
+    const uint32_t total_colors = 0;
+    const uint32_t important_colors = 0;
     pixel_data_offset = ImageInformationDataHeaderSize + FileTypeDataHeaderSize;
     file_size = pixel_data_offset + image_size;
     std::cout << "Saving to BMP file..." << '\n';
@@ -109,9 +109,9 @@ auto Bmp::write_to_file(const std::string &fileOutputPath) -> void {
     utils::write_number_to_file_output_stream(fileOutputStream, &total_colors);
     utils::write_number_to_file_output_stream(fileOutputStream, &important_colors);
     for (image::Pixel pixel: pixelsBuffer) {
-        uint8_t red_ulong = pixel.red.to_ulong();
-        uint8_t green_ulong = pixel.green.to_ulong();
-        uint8_t blue_ulong = pixel.blue.to_ulong();
+        const uint8_t red_ulong = pixel.red.to_ulong();
+        const uint8_t green_ulong = pixel.green.to_ulong();
+        const uint8_t blue_ulong = pixel.blue.to_ulong();
         utils::write_number_to_file_output_stream(fileOutputStream, &red_ulong);
         utils::write_number_to_file_output_stream(fileOutputStream, &green_ulong);
         utils::write_number_to_file_output_stream(fileOutputStream, &blue_ulong);
@@ -122,9 +122,9 @@ auto Bmp::write_to_file(const std::string &fileOutputPath) -> void {
 auto Bmp::read_to_pixels_bmp(std::ifstream &fileInputStream) -> void {
     fileInputStream.seekg(pixel_data_offset);
     for (int i = 0; i < (image_width * image_height); ++i) {
-        unsigned char red = fileInputStream.get();
-        unsigned char green = fileInputStream.get();
-        unsigned char blue = fileInputStream.get();
+        const unsigned char red = fileInputStream.get();
+        const unsigned char green = fileInputStream.get();
+        const unsigned char blue = fileInputStream.get();
         pixelsBuffer.emplace_back((i % image_width), image_height - (i / image_width), std::bitset<8>(red),
                                   std::bitset<8>(green), std::bitset<8>(blue));
     }

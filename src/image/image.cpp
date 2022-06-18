@@ -10,9 +10,9 @@ using Image = image::Image;
 
 auto image::check_size_ascii(const std::vector<image::Pixel> &pixelVector, const std::string &message,
                              const ImageType &imageType) -> bool {
-    auto messageLenBits = message.size() * 8;
+    const auto messageLenBits = message.size() * 8;
     /// Zapisywanie w formacie BMP ma ograniczenie ~8kB - ograniczenia pola `Metadata`
-    auto imageSizePotencial = imageType == ImageType::PPM ? (pixelVector.size() * 3) : (65535);
+    const auto imageSizePotencial = imageType == ImageType::PPM ? (pixelVector.size() * 3) : (65535);
     if (messageLenBits <= imageSizePotencial) {
         std::cout << "Given message (" << messageLenBits << " bits) can be written into this image ("
                   << imageSizePotencial << " bits)" << '\n';
@@ -26,7 +26,7 @@ auto image::check_size_ascii(const std::vector<image::Pixel> &pixelVector, const
 
 auto Image::get_image_unique_ptr(const std::basic_string<char> &input_src) -> std::unique_ptr<Image> {
     auto inputFile = std::unique_ptr<Image>();
-    auto input_source = input_src;
+    const auto input_source = input_src;
     switch (Image::find_type(input_source)) {
         case ImageType::BMP:
             inputFile = std::make_unique<image::Bmp>(input_source);
@@ -42,8 +42,8 @@ auto Image::get_image_unique_ptr(const std::basic_string<char> &input_src) -> st
 }
 
 auto Image::find_type(const std::string &filePath) -> ImageType {
-    auto path = std::filesystem::path(filePath);
-    auto ext = path.extension();
+    const auto path = std::filesystem::path(filePath);
+    const auto ext = path.extension();
     if (ext.string() == ".bmp")
         return ImageType::BMP;
     else if (ext.string() == ".ppm")

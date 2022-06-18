@@ -2,12 +2,12 @@
 
 namespace utils {
     auto check_if_file_readable(const std::string &file_path) -> bool {
-        auto file_permissions = std::filesystem::status(file_path).permissions();
+        const auto file_permissions = std::filesystem::status(file_path).permissions();
         return (file_permissions & std::filesystem::perms::owner_read) != std::filesystem::perms::none;
     }
 
     auto check_if_file_writable(const std::string &file_path) -> bool {
-        auto file_permissions = std::filesystem::status(file_path).permissions();
+        const auto file_permissions = std::filesystem::status(file_path).permissions();
         return (file_permissions & std::filesystem::perms::owner_write) != std::filesystem::perms::none;
     }
 

@@ -9,7 +9,6 @@ namespace cli {
         if (utils::check_if_file_readable(fileInputPath)) {
             auto inputFile = image::Image::get_image_unique_ptr(
                     fileInputPath);
-            std::vector<image::Pixel> &pixelVector = inputFile->get_pixel_vector();
 
             auto path = std::filesystem::path(fileInputPath).filename();
             auto file_size = std::filesystem::file_size(fileInputPath);

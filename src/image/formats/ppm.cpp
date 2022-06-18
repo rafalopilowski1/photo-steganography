@@ -54,7 +54,7 @@ auto Ppm::read_to_pixels_ppm(const std::vector<std::string> &linesBuffer) -> voi
     try {
         for (int y = 0; y < image_height * 3; y += 3) {
             for (int x = 0; x < image_width * 3; x += 3) {
-                auto red = stoull(linesBuffer[x + (y * image_width)]),
+                const auto red = stoull(linesBuffer[x + (y * image_width)]),
                         green = stoull(linesBuffer[x + (y * image_width) + 1]),
                         blue = stoull(linesBuffer[x + (y * image_width) + 2]);
                 pixelsBuffer.emplace_back(x / 3 + 1, y / 3 + 1, red, green, blue);
