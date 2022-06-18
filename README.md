@@ -28,3 +28,11 @@
 ### Footnotes
 
 1: Requires enabling exceptions support in compiler options: `/EHa`
+
+## Disclosure
+
+Image samples provided by © [filesamples.com](https://filesamples.com)
+
+Sources:
+ - [https://filesamples.com/formats/bmp](https://filesamples.com/formats/bmp)
+ - [https://filesamples.com/formats/ppm](https://filesamples.com/formats/ppm) (converted from P6 to P3)
