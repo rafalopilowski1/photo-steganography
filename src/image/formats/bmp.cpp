@@ -83,10 +83,10 @@ Bmp::Bmp(const std::string &fileInputPath) {
 auto Bmp::write_to_file(const std::string &fileOutputPath) -> void {
     auto fileOutputStream = std::ofstream(fileOutputPath,
                                           std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
-    uint16_t plane = 1; /// 1 plane
-    uint16_t bits_per_pixel = 24; /// 8 bits * sizeof(uint16_t) (RGB) = 24 bit/pixel
-    uint32_t compression = 0; /// no compression
-    /// no colour indexing
+    uint16_t plane = 1; // 1 plane
+    uint16_t bits_per_pixel = 24; // 8 bits * sizeof(uint16_t) (RGB) = 24 bit/pixel
+    uint32_t compression = 0; // no compression
+    // no colour indexing
     uint32_t total_colors = 0;
     uint32_t important_colors = 0;
     pixel_data_offset = ImageInformationDataHeaderSize + FileTypeDataHeaderSize;

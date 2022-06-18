@@ -7,7 +7,7 @@ namespace image {
         const std::string Header = "P3";
 
         /**
-         * Konstruktor klasy obazu PPM, który odczytuje podstawowe informacje o obrazie
+         * Konstruktor klasy obrazu PPM, który odczytuje podstawowe informacje o obrazie
          * @param fileInputPath Ścieżka do pliku wejściowego
          */
         explicit Ppm(const std::string &fileInputPath);
