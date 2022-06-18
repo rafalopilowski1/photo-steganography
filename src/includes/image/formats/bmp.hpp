@@ -3,6 +3,9 @@
 #include "image/image.hpp"
 
 namespace image {
+    /**
+     * Struktura obrazu BMP
+     */
     struct Bmp : image::Image {
         const std::string Header="BM";
         /// Rozmiar nagłówka `BITMAPINFOHEADER`

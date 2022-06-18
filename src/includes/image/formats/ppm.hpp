@@ -3,6 +3,9 @@
 #include "image/image.hpp"
 
 namespace image {
+    /**
+     * Struktura obrazu PPM P3
+     */
     struct Ppm : image::Image {
         const std::string Header = "P3";
 

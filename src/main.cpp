@@ -4,10 +4,6 @@
 
 auto main(int char_count, char *argument_vector[]) -> int {
     switch (char_count) {
-        case 1:
-            std::cerr << "Not enough arguments" << "\n\n";
-            cli::help();
-            break;
         case 2:
         case 3:
         case 4:
@@ -15,7 +11,7 @@ auto main(int char_count, char *argument_vector[]) -> int {
             cli::run(char_count, argument_vector);
             break;
         default:
-            std::cerr << "Too many arguments" << "\n\n";
+            std::cerr << "Invalid number of arguments" << "\n\n";
             cli::help();
             break;
     }
