@@ -9,10 +9,13 @@
 - `-i <path_to_file>`: Prints out image metadata
 
 ## Supported formats
+
 - P3 PPM
 - BMP
 
 ## Compatibility table
+
+- `Doxygen` documentation works best with `clang` installed (more accurate code parsing)
 
 |      Tested with:       | Footnotes |
 |:-----------------------:|:---------:|
