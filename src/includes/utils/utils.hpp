@@ -1,10 +1,44 @@
+#pragma once
+
 #include <concepts>
 #include <fstream>
 #include <bit>
 #include <algorithm>
 #include <vector>
+#include <filesystem>
 
 namespace utils {
+    /**
+     * Funkcja sprawdzająca, czy mamy dostęp do odczytu pliku
+     * @param file_path Ścieżka do pliku
+     * @return `true` - tak, `false` - nie
+     */
+    auto check_if_file_readable(const std::string &file_path) -> bool;
+
+    /**
+     * Funkcja sprawdzająca, czy mamy dostęp do zapisu pliku
+     * @param file_path Ścieżka do pliku
+     * @return `true` - tak, `false` - nie
+     */
+    auto check_if_file_writable(const std::string &file_path) -> bool;
+
+    /**
+     * Funkcja pozwalająca zczytać z pliku tekst (*endian-independent*)
+     * @param fileInputStream Strumień pliku wejściowego
+     * @param number_of_bytes Ilość bajtów do zczytania
+     * @return Zczytany tekst
+     */
+    auto read_string_from_file(std::basic_ifstream<char> &fileInputStream,
+                               unsigned int number_of_bytes) -> std::string;
+
+    /**
+     * Funkcja pozwalająca zapisać do pliku tekst
+     * @param fileOutputStream Strumień pliku wyjściowego
+     * @param value Referencja do tekstu, który ma być zapisany
+     */
+    auto write_string_to_file_output_stream(std::basic_ofstream<char> &fileOutputStream,
+                                            const std::string &value) -> void;
+
     /**
      * Szablon funkcji, która odwraca bajty w liczbie (potrzebne dla *endian-independence*)
      * @tparam I Typ liczbpwy
@@ -25,20 +59,6 @@ namespace utils {
         return out;
     }
 
-    /**
-     * Funkcja pozwalająca zczytać z pliku tekst (*endian-independent*)
-     * @param fileInputStream Strumień pliku wejściowego
-     * @param number_of_bytes Ilość bajtów do zczytania
-     * @return Zczytany tekst
-     */
-    auto read_string_from_file(std::basic_ifstream<char> &fileInputStream,
-                               unsigned int number_of_bytes) -> std::string {
-        auto temp_vector = std::vector<char>(number_of_bytes);
-        fileInputStream.read(temp_vector.data(), sizeof(char) * number_of_bytes);
-        if (std::endian::native == std::endian::big)
-            std::ranges::reverse(temp_vector);
-        return std::string{temp_vector.begin(), temp_vector.end()};
-    }
 
     /**
      * Szablon funkcji pozwalający zczytać z pliku liczbę (*endian-independent*)
@@ -48,22 +68,12 @@ namespace utils {
      */
     template<typename I>
     requires std::integral<I>
-    auto read_number_from_file(std::basic_ifstream<char> &fileInputStream,
-                               I *buffer) -> void {
+    auto read_number_from_file(std::basic_ifstream<char> &fileInputStream, I *buffer) -> void {
         fileInputStream.read(reinterpret_cast<char *>(buffer), sizeof(I));
         if (std::endian::native == std::endian::big)
             *buffer = reverse_bytes(*buffer);
     }
 
-    /**
-     * Funkcja pozwalająca zapisać do pliku tekst
-     * @param fileOutputStream Strumień pliku wyjściowego
-     * @param value Referencja do tekstu, który ma być zapisany
-     */
-    auto write_string_to_file_output_stream(std::basic_ofstream<char> &fileOutputStream,
-                                            const std::string &value) -> void {
-        fileOutputStream.write(reinterpret_cast<const char *>(value.data()), sizeof(char) * value.size());
-    }
 
     /**
      * Szablon funkcji pozwalający zapisać do pliku liczbę
