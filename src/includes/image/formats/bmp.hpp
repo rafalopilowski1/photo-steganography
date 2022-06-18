@@ -5,8 +5,9 @@
 namespace image {
     struct Bmp : image::Image {
         const std::string Header="BM";
-        /// Size of header in `BITMAPINFOHEADER`
+        /// Rozmiar nagłówka `BITMAPINFOHEADER`
         inline static const uint32_t ImageInformationDataHeaderSize = 40;
+        /// Rozmiar części nagłówka o typie pliku BMP
         inline static const uint32_t FileTypeDataHeaderSize = 14;
         const std::string Metadata="PJ";
         uint32_t file_size{};
